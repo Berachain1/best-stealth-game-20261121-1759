@@ -99,6 +99,13 @@ function drawFloor(ctx, game) {
       if (ch === '#') {
         ctx.fillStyle = pal.wall;
         ctx.fillRect(x, y, TILE, TILE);
+        // A bright outline on every wall tile, so the museum's boundary
+        // reads at a glance instead of melting into the page background.
+        ctx.strokeStyle = pal.wallTrim;
+        ctx.globalAlpha = 0.55;
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(x + 1, y + 1, TILE - 2, TILE - 2);
+        ctx.globalAlpha = 1;
         ctx.fillStyle = pal.wallTrim;
         ctx.fillRect(x, y, TILE, 3);
       }
@@ -211,11 +218,15 @@ function drawExit(ctx, game) {
   roundRect(ctx, x + 3, y + 3, TILE - 6, TILE - 6, 6);
   ctx.stroke();
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 10px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(open ? 'EXIT' : 'LOCKED', x + TILE / 2, y + TILE / 2 + 3.5);
+  // "LOCKED" is wider than "EXIT": set it smaller so it fits the door.
+  ctx.font = open ? 'bold 10px sans-serif' : 'bold 8px sans-serif';
+  ctx.fillText(open ? 'EXIT' : 'LOCKED', x + TILE / 2, y + TILE / 2 + 3);
   if (open) {
     ctx.fillStyle = `rgba(47, 191, 90, ${0.25 + pulse * 0.2})`;
+    ctx.fillRect(x - 4, y - 4, TILE + 8, TILE + 8);
+  } else {
+    ctx.fillStyle = 'rgba(179, 64, 47, 0.18)';
     ctx.fillRect(x - 4, y - 4, TILE + 8, TILE + 8);
   }
 }
@@ -494,6 +505,13 @@ export function render(ctx, game) {
     return;
   }
   drawFloor(ctx, game);
+  // A bright frame around the whole floor, so the level's boundary
+  // reads even where the outer wall tiles are dark.
+  ctx.strokeStyle = PALETTES[game.level.def.palette].accent;
+  ctx.globalAlpha = 0.8;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(1.5, PLAY_TOP + 1.5, COLS * TILE - 3, ROWS * TILE - 3);
+  ctx.globalAlpha = 1;
   drawVisionCones(ctx, game);
   drawCover(ctx, game);
   drawKeys(ctx, game);

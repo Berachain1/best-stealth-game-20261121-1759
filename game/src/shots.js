@@ -72,7 +72,7 @@ function shotNearmiss(game) {
   placeGuard(game, 2, 26, 5, Math.PI / 2, 'patrol');
   game.level.keys[0].taken = true;
   game.keysTaken = 1;
-  game.meter = 55;
+  game.meter = 82; // well past the 60% line, so the red edge vignette shows
   game.spotted = 0;
   game.rings.push({ x: game.player.x, y: game.player.y, radius: 90, kind: 'step', age: 0.35, life: 0.8 });
   freeze(game);
